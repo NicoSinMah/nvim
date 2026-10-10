@@ -16,7 +16,7 @@ vim.lsp.config("qmlls", {
   cmd = { "qmlls" }
 })
 
-vim.lsp.config("elixir-ls", {
+vim.lsp.config("elixirls", {
   cmd = { "elixir-ls" }
 })
 

@@ -1,62 +1,38 @@
-local is_afriguez = false
-if vim.g.hostname == vim.g.afriguez then
-  is_afriguez = true
-end
-
 return {
   {
     "obsidian-nvim/obsidian.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     lazy = false,
     opts = {
+      -- 1. Aquí limpiamos los workspaces para que apunten SOLO a tus notas reales
       workspaces = {
         {
-          name = is_afriguez and "nb" or "obsidian",
-          path = is_afriguez and "~/workspace/nb" or "~/workspace/obsidian",
+          name = "personal",
+          path = "/home/vaz/.config/obsidian/",
           overrides = {
-            notes_subdir = is_afriguez and "home" or "Zettelkasten",
+            notes_subdir = "Zettelkasten",
             frontmatter = { enabled = true },
             footer = { enabled = true },
           },
         },
-        {
-          name = "blog",
-          path = "~/workspace/github.com/Adrephos/blog",
-          overrides = {
-            frontmatter = { enabled = false },
-            footer = { enabled = true },
-            notes_subdir = "blog",
-            templates = {
-              enabled = false,
-              folder = "templates",
-              date_format = "%Y-%m-%d",
-              time_format = "%H:%M",
-            },
-          },
-        },
-        {
-          name = "default",
-          path = "~/note",
-          overrides = {
-            frontmatter = { enabled = false },
-            footer = { enabled = false },
-          },
-        },
       },
       legacy_commands = false,
+      -- 2. Mantienes intacto el formato de tus plantillas
       templates = {
         folder = "Templates",
         date_format = "%Y-%m-%d-%a",
         time_format = "%H:%M",
       },
-      notes_subdir = is_afriguez and "home" or "Zettelkasten",
+      notes_subdir = "Zettelkasten",
       new_notes_location = "notes_subdir",
       ui = { enable = false },
+      -- 3. Mantienes tus configuraciones de checkboxes
       checkbox = {
         enabled = true,
         create_new = true,
         order = { " ", "/", "x", "-" },
       },
+      -- 4. Mantienes la lógica para pegar imágenes automáticamente
       attachments = {
         folder = "",
         img_name_func = function()
@@ -64,17 +40,20 @@ return {
         end,
         confirm_img_paste = false,
       },
+      -- 5. Tus notas seguirán usando el ID basado en la fecha actual
       note_id_func = function()
         return os.date("%Y%m%d%H%M%S")
       end
     },
+    -- 6. Tus atajos de teclado personalizados se quedan exactamente igual
     keys = function()
       return {
         { "<leader>v",  "<cmd>Obsidian paste_img<cr>" },
         { "<leader>of", "<cmd>Obsidian search<cr>" },
         { "<leader>ol", "<cmd>Obsidian follow_link<cr>" },
-        { "<leader>on", is_afriguez and "<cmd>Obsidian new<cr>" or "<cmd>Obsidian new_from_template<CR>" },
+        { "<leader>on", "<cmd>Obsidian new_from_template<CR>" }, -- Simplificado sin la condición de afriguez
       }
     end,
   }
 }
+
